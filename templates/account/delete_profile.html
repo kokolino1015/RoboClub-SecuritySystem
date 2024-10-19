@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="{% url 'delete profile' object.username %}" enctype="multipart/form-data" method="post">
+        <div class="description">
+            <h1>Are you sure</h1>
+            {% csrf_token %}
+            <button>Submit</button>
+        </div>
+    </form>
+{% endblock %}

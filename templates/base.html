@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Base HTML Template</title>
+    <!-- External CSS (Optional) -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Inline CSS for quick styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav {
+            background-color: #444;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<header>
+    <a href="{% url 'home' %}">Home</a>
+    {% if not request.user.is_active %}
+            <a href="{% url 'registration' %}">Register</a>
+            <a href="{% url 'login' %}">Login</a>
+        {% else %}
+            <a href="{% url 'profile detail' request.user.username %}">{{ request.user.username }}</a>
+            <a href="{% url 'logout' %}">Log out</a>
+        {% endif %}
+</header>
+<body>
+
+<!-- Header Section -->
+{#<header>#}
+{#    <h1>Welcome to My Website</h1>#}
+{#    <p>Your one-stop solution for web resources</p>#}
+{#</header>#}
+{##}
+{#<!-- Navigation Menu -->#}
+{#<nav>#}
+{#    <a href="#home">Home</a>#}
+{#    <a href="#about">About</a>#}
+{#    <a href="#services">Services</a>#}
+{#    <a href="#contact">Contact</a>#}
+{#</nav>#}
+
+<!-- Main Content Section -->
+{#<main>#}
+{#    <h2>Main Content Area</h2>#}
+{#    <p>This is where the main content of the webpage will be displayed. You can replace this text with your content.</p>#}
+{#    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ac justo eu nulla faucibus posuere nec at augue.#}
+{#        Nulla facilisi.</p>#}
+{#</main>#}
+{% block content %}
+{% endblock %}
+<!-- Footer Section -->
+{#<footer>#}
+{#    <p>&copy; 2024 YourWebsiteName. All rights reserved.</p>#}
+{#    <p>Follow us on:#}
+{#        <a href="#">Twitter</a> |#}
+{#        <a href="#">Facebook</a> |#}
+{#        <a href="#">Instagram</a>#}
+{#    </p>#}
+{#</footer>#}
+
+</body>
+</html>
