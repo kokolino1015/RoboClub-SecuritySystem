@@ -4,7 +4,7 @@ from django.contrib.auth import login, get_user_model
 from django.urls import reverse_lazy
 from django.views import generic as views
 from SecuritySystem.account.forms import UserRegistrationFrom, EditProfileForm
-from SecuritySystem.account.models import Profile
+from SecuritySystem.account.models import UserActivity, AppUser, Profile
 
 UserModel = get_user_model()
 
@@ -29,8 +29,6 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     pass
-    # success_url_allowed_hosts = reverse_lazy('home')
-    # template_name = 'account/logout.html'
 
 class ProfileDetailsView(views.DetailView):
     model = Profile
@@ -53,7 +51,7 @@ class EditProfileView(views.UpdateView, LoginRequiredMixin):
         return reverse_lazy('profile detail', kwargs={'slug': self.request.user.username})
 
 
-class DeleteProfileView(views.DeleteView, LoginRequiredMixin):
+class DeleteProfileView(LoginRequiredMixin, views.DeleteView):
     model = UserModel
     fields = '__all__'
     template_name = 'account/delete_profile.html'
@@ -61,3 +59,4 @@ class DeleteProfileView(views.DeleteView, LoginRequiredMixin):
 
     def get_success_url(self):
         return reverse_lazy('home')
+

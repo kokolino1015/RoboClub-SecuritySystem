@@ -15,7 +15,6 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     )
     username = models.CharField(
         max_length=30,
-        unique=True,
     )
     is_staff = models.BooleanField(
         default=False,

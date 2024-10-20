@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'SecuritySystem.main',
-    'SecuritySystem.account'
+    'SecuritySystem.account',
+    'SecuritySystem.admin_panel',
 ]
 
 MIDDLEWARE = [
