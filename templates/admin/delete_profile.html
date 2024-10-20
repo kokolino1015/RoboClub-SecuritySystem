@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Delete Profile</h2>
+  <p>Are you sure you want to delete {{ object.username }}?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit">Confirm Deletion</button>
+  </form>
+{% endblock %}

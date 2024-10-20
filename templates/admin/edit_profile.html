@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="{% url 'user-edit' object.slug %}" method="post" enctype="multipart/form-data">
+<form  method="post" enctype="multipart/form-data">
     <div class="description">
     {{ form.as_p }}
     {% csrf_token %}
