@@ -7,7 +7,7 @@ from SecuritySystem.account.views import UserRegistrationView, UserLoginView, Us
 urlpatterns = [
     path('registration/', UserRegistrationView.as_view(), name='registration'),
     path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('logout/', UserLogoutView.as_view(next_page='home'), name='logout'),
     path('<slug:slug>/', ProfileDetailsView.as_view(), name='details'),
     path('<slug:slug>/edit', EditProfileView.as_view(), name='edit profile'),
     path('<slug:slug>/delete', DeleteProfileView.as_view(), name='delete profile'),

@@ -28,7 +28,9 @@ class UserLoginView(LoginView):
 
 
 class UserLogoutView(LogoutView):
-    success_url_allowed_hosts = reverse_lazy('home')
+    pass
+    # success_url_allowed_hosts = reverse_lazy('home')
+    # template_name = 'account/logout.html'
 
 class ProfileDetailsView(views.DetailView):
     model = Profile

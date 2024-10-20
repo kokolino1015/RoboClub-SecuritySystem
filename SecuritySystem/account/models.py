@@ -45,3 +45,20 @@ class Profile(models.Model):
         primary_key=True,
     )
     slug = models.SlugField()
+
+class UserActivity(models.Model):
+    user = models.ForeignKey(
+        AppUser,
+        on_delete=models.CASCADE
+    )
+    login_time = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    logout_time = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} - Last login: {self.login_time}, Last logout: {self.logout_time}"

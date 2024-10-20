@@ -19,6 +19,9 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
             # validate_only_letters,
         )
     )
+    faculty_number = forms.CharField(
+        max_length=30,
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,6 +37,7 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
         profile = Profile(
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
+            faculty_number=self.cleaned_data['faculty_number'],
             user=user,
             slug=user.username
         )
