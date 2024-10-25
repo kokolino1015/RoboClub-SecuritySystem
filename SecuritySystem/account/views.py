@@ -27,10 +27,10 @@ class UserLoginView(LoginView):
         return reverse_lazy('home')
 
 
-class UserLogoutView(LogoutView):
+class UserLogoutView(LoginRequiredMixin, LogoutView):
     pass
 
-class ProfileDetailsView(views.DetailView):
+class ProfileDetailsView(views.DetailView, LoginRequiredMixin):
     model = Profile
     template_name = 'account/profile_details.html'
     context_object_name = 'profile'

@@ -4,13 +4,13 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views import View
-from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 from SecuritySystem.account.forms import UserRegistrationFrom
 from SecuritySystem.account.models import AppUser, Profile
 from SecuritySystem.admin_panel.forms import UserProfileForm
+from SecuritySystem.account.mixins import AdminRequiredMixin, AdminOrObserverRequiredMixin
 
 
 class LogoutAndRedirectToSuperuserLoginView(View):
@@ -23,27 +23,16 @@ class AdminLoginView(LoginView):
 
     def form_valid(self, form):
         user = form.get_user()
-
-        if user.is_superuser:
+        if user.role.id in [1, 2]:
             login(self.request, user)
             return redirect('admin-dashboard')
         else:
-            messages.error(self.request, 'Permission denied. You must be a admin to log in.')
+            messages.error(self.request, 'Permission denied. You must be an Admin or Observer to log in.')
             return redirect('admin-login')
 
 
-class AdminDashboardView(UserPassesTestMixin, View):
+class AdminDashboardView(AdminOrObserverRequiredMixin, View):
     template_name = 'admin/dashboard.html'
-
-    def test_func(self):
-        return self.request.user.is_superuser
-
-    def handle_no_permission(self):
-        if self.request.user.is_authenticated:
-            return render(self.request, 'admin/permission_denied.html', status=403)
-        else:
-            return redirect('admin-login')
-
 
     def get(self, request, *args, **kwargs):
         context = {
@@ -51,23 +40,16 @@ class AdminDashboardView(UserPassesTestMixin, View):
         }
         return render(request, self.template_name, context)
 
-class UserCreateView(UserPassesTestMixin, CreateView):
+class UserCreateView(AdminRequiredMixin, CreateView):
     form_class = UserRegistrationFrom
     template_name = 'admin/user_creation_form.html'
     success_url = reverse_lazy('admin-dashboard')
 
-    def test_func(self):
-        return self.request.user.is_superuser
-
-class UserUpdateView(UserPassesTestMixin, UpdateView):
+class UserUpdateView(AdminRequiredMixin, UpdateView):
     form_class = UserProfileForm
     template_name = 'admin/edit_profile.html'
     success_url = reverse_lazy('admin-dashboard')
     slug_field = 'username'
-
-
-    def test_func(self):
-        return self.request.user.is_superuser
 
     def get_object(self, queryset=None):
         slug = self.kwargs.get('slug')
@@ -91,13 +73,10 @@ class UserUpdateView(UserPassesTestMixin, UpdateView):
         return render(request, self.template_name, {'form': form})
 
 
-class UserDeleteView(UserPassesTestMixin, DeleteView):
+class UserDeleteView(AdminRequiredMixin, DeleteView):
     model = AppUser
     template_name = 'admin/delete_profile.html'
     success_url = reverse_lazy('admin-dashboard')
-
-    def test_func(self):
-        return self.request.user.is_superuser
 
     def get_object(self, queryset=None):
         slug = self.kwargs.get('slug')

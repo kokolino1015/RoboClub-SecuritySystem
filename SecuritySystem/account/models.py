@@ -6,6 +6,11 @@ from django.contrib.auth import models as auth_models
 from SecuritySystem.account.manager import AppUsersManager
 
 
+class Role(models.Model):
+    name = models.CharField(
+        max_length=50
+    )
+
 
 class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     email = models.EmailField(
@@ -25,6 +30,15 @@ class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     USERNAME_FIELD = 'email'
     objects = AppUsersManager()
     REQUIRED_FIELDS = ['username']
+    role = models.ForeignKey(
+        Role,
+        on_delete=models.SET_NULL, null=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.role:
+            self.role = Role.objects.get(name='normal_user')
+        super().save(*args, **kwargs)
 
 
 class Profile(models.Model):
@@ -33,7 +47,6 @@ class Profile(models.Model):
     )
     last_name = models.CharField(
         max_length=30,
-
     )
     faculty_number = models.CharField(
         max_length=9,
@@ -44,6 +57,7 @@ class Profile(models.Model):
         primary_key=True,
     )
     slug = models.SlugField()
+
 
 class UserActivity(models.Model):
     user = models.ForeignKey(
