@@ -30,18 +30,25 @@ class UserLoginView(LoginView):
 class UserLogoutView(LoginRequiredMixin, LogoutView):
     pass
 
-class ProfileDetailsView(views.DetailView, LoginRequiredMixin):
-    model = Profile
+class ProfileDetailsView(LoginRequiredMixin,views.DetailView):
+    model = AppUser
     template_name = 'account/profile_details.html'
     context_object_name = 'profile'
     slug_field = 'slug'
 
+    def get_queryset(self):
+        return Profile.objects.filter(slug=self.kwargs['slug'])
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['slug'] = self.request.user.username
+        context['update_permission'] = False
+        if self.request.user.role.id == 1 or self.request.user.id == self.object.user.id:
+            context['update_permission'] = True
+        context['activity'] = UserActivity.objects.filter(user_id=self.object.user_id).all()
         return context
 
-class EditProfileView(views.UpdateView, LoginRequiredMixin):
+class EditProfileView(LoginRequiredMixin, views.UpdateView):
     form_class = EditProfileForm
     model = Profile
     template_name = 'account/edit_profile.html'

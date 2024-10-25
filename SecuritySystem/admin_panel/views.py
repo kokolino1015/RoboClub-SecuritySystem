@@ -9,7 +9,7 @@ from django.views.generic import CreateView, UpdateView, DeleteView
 
 from SecuritySystem.account.forms import UserRegistrationFrom
 from SecuritySystem.account.models import AppUser, Profile
-from SecuritySystem.admin_panel.forms import UserProfileForm
+from SecuritySystem.admin_panel.forms import UserProfileForm, AssignRoleForm
 from SecuritySystem.account.mixins import AdminRequiredMixin, AdminOrObserverRequiredMixin
 
 
@@ -83,3 +83,22 @@ class UserDeleteView(AdminRequiredMixin, DeleteView):
         profile = Profile.objects.get(slug=slug)
         user = AppUser.objects.get(id=profile.user_id)
         return get_object_or_404(AppUser, username=user.username)
+
+class AssignRoleView(AdminRequiredMixin, View):
+    template_name = 'admin/assign_role.html'
+
+    def get_object(self, slug):
+        return get_object_or_404(AppUser, username=slug)
+
+    def get(self, request, slug, *args, **kwargs):
+        user = self.get_object(slug)
+        form = AssignRoleForm(instance=user)
+        return render(request, self.template_name, {'form': form, 'user': user})
+
+    def post(self, request, slug, *args, **kwargs):
+        user = self.get_object(slug)
+        form = AssignRoleForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('admin-dashboard')
+        return render(request, self.template_name, {'form': form, 'user': user})

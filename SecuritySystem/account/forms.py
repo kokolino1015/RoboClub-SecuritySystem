@@ -1,7 +1,7 @@
 from django.contrib.auth import forms as auth_forms, get_user_model
 from django import forms
 
-from SecuritySystem.account.models import Profile
+from SecuritySystem.account.models import Profile, AppUser
 
 UserModel = get_user_model()
 
@@ -50,4 +50,25 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name')
+        fields = ('first_name', 'last_name', 'faculty_number')
+
+    # You can add user fields here by overriding the __init__ method
+    def __init__(self, *args, **kwargs):
+        print(kwargs['instance'].user)
+        user = AppUser.objects.filter(id=kwargs['instance'].user_id).first()
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields['username'] = forms.CharField(initial=user.username)
+            self.fields['email'] = forms.EmailField(initial=user.email)
+
+    def save(self, commit=True):
+        # Override save to also update the AppUser instance
+        profile = super().save(commit=False)
+        if commit:
+            profile.save()
+            user = profile.user
+            user.username = self.cleaned_data['username']
+            user.email = self.cleaned_data['email']
+            user.save()
+        return profile

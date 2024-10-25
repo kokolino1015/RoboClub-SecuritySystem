@@ -11,6 +11,9 @@ class Role(models.Model):
         max_length=50
     )
 
+    def __str__(self):
+        return self.name
+
 
 class AppUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     email = models.EmailField(
