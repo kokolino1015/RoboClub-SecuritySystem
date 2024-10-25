@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Permission Denied</h1>
-    <p>You do not have permission to access this page. Superuser privileges are required.</p>
+    <p>You do not have permission to access this page. Admin or Observer privileges are required.</p>
     <a href="{% url 'logout-redirect' %}">Login as Admin or Observer</a>
 {% endblock %}

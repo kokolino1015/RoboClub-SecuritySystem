@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Assign Role to {{ user.username }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  
+        <button type="submit">Assign Role</button>
+    </form>
+    <a href="{% url 'admin-dashboard' %}">Back to Dashboard</a> 
+{% endblock %}

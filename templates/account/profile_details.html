@@ -2,7 +2,32 @@
 {% block content %}
     <div class="description">
         <p>{{ object.first_name }} {{ object.last_name }}</p>
-        <p><a href="{% url 'edit profile' object.slug %}">Edit profile</a></p>
-        <p><a href="{% url 'delete profile' object.slug %}">Delete profile</a></p>
+{#        <h2>Activities for User ID: {{ object.username }}</h2>#}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Login Time</th>
+                    <th>Logout Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activity %}
+                <tr>
+                    <td>{{ activity.login_time|date:"Y-m-d H:i:s" }}</td> <!-- Format the datetime -->
+                    <td>{{ activity.logout_time|date:"Y-m-d H:i:s" }}</td> <!-- Format the datetime -->
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No activities found for this user.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        {% if update_permission %}
+            
+            <p><a href="{% url 'edit profile' object.slug %}">Edit profile</a></p>
+            <p><a href="{% url 'delete profile' object.slug %}">Delete profile</a></p>
+        {% endif %}
     </div>
 {% endblock %}
