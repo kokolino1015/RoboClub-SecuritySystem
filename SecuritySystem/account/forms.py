@@ -22,6 +22,8 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
     faculty_number = forms.CharField(
         max_length=30,
     )
+    chip = forms.IntegerField(
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -39,7 +41,8 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
             last_name=self.cleaned_data['last_name'],
             faculty_number=self.cleaned_data['faculty_number'],
             user=user,
-            slug=user.username
+            slug=user.username,
+            chip=self.cleaned_data['chip'],
         )
         if commit:
             profile.save()
@@ -50,7 +53,7 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'faculty_number')
+        fields = ('first_name', 'last_name', 'faculty_number', 'chip')
 
     # You can add user fields here by overriding the __init__ method
     def __init__(self, *args, **kwargs):

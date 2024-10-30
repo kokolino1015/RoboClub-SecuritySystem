@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
-from django.contrib.auth import login, get_user_model
+from django.contrib.auth import login, get_user_model, logout
 from django.urls import reverse_lazy
 from django.views import generic as views
 from SecuritySystem.account.forms import UserRegistrationFrom, EditProfileForm
-from SecuritySystem.account.models import UserActivity, AppUser, Profile
+from SecuritySystem.account.models import AppUser, Profile, UserActivityWeb  # UserActivity
 
 UserModel = get_user_model()
 
@@ -16,6 +16,7 @@ class UserRegistrationView(views.CreateView):
 
     def form_valid(self, *args, **kwargs):
         result = super().form_valid(*args, **kwargs)
+        self.request.session['logout_method'] = 'web'
         login(self.request, self.object)
         return result
 
@@ -23,12 +24,19 @@ class UserRegistrationView(views.CreateView):
 class UserLoginView(LoginView):
     template_name = 'account/login.html'
 
+    def form_valid(self, form):
+        self.request.session['login_method'] = 'web'
+        return super().form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy('home')
 
 
 class UserLogoutView(LoginRequiredMixin, LogoutView):
-    pass
+    def dispatch(self, request, *args, **kwargs):
+        request.session['logout_method'] = 'web'
+        response = super().dispatch(request, *args, **kwargs)
+        return response
 
 class ProfileDetailsView(LoginRequiredMixin,views.DetailView):
     model = AppUser
@@ -45,7 +53,7 @@ class ProfileDetailsView(LoginRequiredMixin,views.DetailView):
         context['update_permission'] = False
         if self.request.user.role.id == 1 or self.request.user.id == self.object.user.id:
             context['update_permission'] = True
-        context['activity'] = UserActivity.objects.filter(user_id=self.object.user_id).all()
+        context['activity'] = UserActivityWeb.objects.filter(user_id=self.object.user_id).all()
         return context
 
 class EditProfileView(LoginRequiredMixin, views.UpdateView):

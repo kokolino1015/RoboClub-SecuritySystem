@@ -54,6 +54,7 @@ class Profile(models.Model):
     faculty_number = models.CharField(
         max_length=9,
     )
+    chip = models.IntegerField()
     user = models.OneToOneField(
         AppUser,
         on_delete=models.CASCADE,
@@ -62,7 +63,24 @@ class Profile(models.Model):
     slug = models.SlugField()
 
 
-class UserActivity(models.Model):
+class UserActivityLab(models.Model):
+    user = models.ForeignKey(
+        AppUser,
+        on_delete=models.CASCADE
+    )
+    login_time = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    logout_time = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return f"{self.user.username} - Last login: {self.login_time}, Last logout: {self.logout_time}"
+
+class UserActivityWeb(models.Model):
     user = models.ForeignKey(
         AppUser,
         on_delete=models.CASCADE

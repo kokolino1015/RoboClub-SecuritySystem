@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 from SecuritySystem.account.forms import UserRegistrationFrom
-from SecuritySystem.account.models import AppUser, Profile, UserActivity
+from SecuritySystem.account.models import AppUser, Profile, UserActivityWeb
 from SecuritySystem.admin_panel.forms import UserProfileForm, AssignRoleForm
 from SecuritySystem.account.mixins import AdminRequiredMixin, AdminOrObserverRequiredMixin
 
@@ -16,6 +16,7 @@ from SecuritySystem.account.mixins import AdminRequiredMixin, AdminOrObserverReq
 class LogoutAndRedirectToSuperuserLoginView(View):
     def get(self, request, *args, **kwargs):
         try:
+            request.session['logout_method'] = 'web'
             logout(request)
         except Exception as e:
             pass
@@ -27,6 +28,7 @@ class AdminLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         if user.role.id in [1, 2]:
+            self.request.session['login_method'] = 'web'
             login(self.request, user)
             return redirect('admin-dashboard')
         else:

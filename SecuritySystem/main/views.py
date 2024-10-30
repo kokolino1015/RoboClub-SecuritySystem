@@ -10,8 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from SecuritySystem.account.models import AppUser, Profile
 
 
-# Create your views here.
-
 class HomeView(views.TemplateView):
     template_name = 'main/home.html'
 
@@ -31,7 +29,7 @@ class ChipCheckView(views.View):
         except Profile.DoesNotExist:
             return JsonResponse({'error': 'No user with this faculty number found'}, status=404)
 
-
+        request.session['login_method'] = 'chip'
         login(request, user)
 
 
@@ -57,7 +55,7 @@ class ChipLogoutView(views.View):
             user = AppUser.objects.get(username=profile.slug)
         except Profile.DoesNotExist:
             return JsonResponse({'error': 'No user with this faculty number found'}, status=404)
-
+        request.session['logout_method'] = 'chip'
         logout(request)
         return JsonResponse({'message': 'User logged out successfully.'})
         # else: ako shte checkvame dali e vlqzal predi tova
