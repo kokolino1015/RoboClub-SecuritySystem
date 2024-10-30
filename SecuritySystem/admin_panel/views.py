@@ -8,14 +8,17 @@ from django.shortcuts import redirect
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 from SecuritySystem.account.forms import UserRegistrationFrom
-from SecuritySystem.account.models import AppUser, Profile
+from SecuritySystem.account.models import AppUser, Profile, UserActivity
 from SecuritySystem.admin_panel.forms import UserProfileForm, AssignRoleForm
 from SecuritySystem.account.mixins import AdminRequiredMixin, AdminOrObserverRequiredMixin
 
 
 class LogoutAndRedirectToSuperuserLoginView(View):
     def get(self, request, *args, **kwargs):
-        logout(request)
+        try:
+            logout(request)
+        except Exception as e:
+            pass
         return redirect('admin-login')
 
 class AdminLoginView(LoginView):
@@ -38,6 +41,9 @@ class AdminDashboardView(AdminOrObserverRequiredMixin, View):
         context = {
             'users': AppUser.objects.all(),
         }
+        context['update_permission'] = False
+        if self.request.user.role.id == 1:
+            context['update_permission'] = True
         return render(request, self.template_name, context)
 
 class UserCreateView(AdminRequiredMixin, CreateView):
