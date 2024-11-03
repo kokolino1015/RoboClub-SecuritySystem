@@ -54,7 +54,7 @@ class Profile(models.Model):
     faculty_number = models.CharField(
         max_length=9,
     )
-    chip = models.IntegerField()
+    chip = models.CharField(unique=True, max_length=255)
     user = models.OneToOneField(
         AppUser,
         on_delete=models.CASCADE,
