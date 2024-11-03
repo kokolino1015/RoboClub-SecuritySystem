@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        <div class="container-fluid">
+            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                    <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <a href="{% url 'home' %}" class="">
+                                <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>DarkPan</h3>
+                            </a>
+                            <h3>Admin login</h3>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form method="post" action="{% url 'admin-login' %}">
+                            {% csrf_token %}
+
+                            <!-- Username Field with Floating Label -->
+                            <div class="form-floating mb-3">
+                                <input type="text" name="username" id="floatingInput" class="form-control"
+                                       placeholder="Username">
+                                <label for="floatingInput">Email</label>
+                                {% if form.username.errors %}
+                                    <div class="text-danger">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Password Field with Floating Label -->
+                            <div class="form-floating mb-4">
+                                <input type="password" name="password" id="floatingPassword" class="form-control"
+                                       placeholder="Password">
+                                <label for="floatingPassword">Password</label>
+                                {% if form.password.errors %}
+                                    <div class="text-danger">{{ form.password.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Sign In</button>
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+{% endblock %}
