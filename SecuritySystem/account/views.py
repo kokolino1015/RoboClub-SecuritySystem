@@ -16,7 +16,7 @@ class UserRegistrationView(views.CreateView):
 
     def form_valid(self, *args, **kwargs):
         result = super().form_valid(*args, **kwargs)
-        self.request.session['logout_method'] = 'web'
+        self.request.session['login_method'] = 'web'
         login(self.request, self.object)
         return result
 
@@ -53,7 +53,7 @@ class ProfileDetailsView(LoginRequiredMixin,views.DetailView):
         context['update_permission'] = False
         if self.request.user.role.id == 1 or self.request.user.id == self.object.user.id:
             context['update_permission'] = True
-        context['activity'] = UserActivityWeb.objects.filter(user_id=self.object.user_id).all()
+        context['activity'] = UserActivityWeb.objects.filter(user_id=self.object.user_id).order_by('-id').all()
         return context
 
 class EditProfileView(LoginRequiredMixin, views.UpdateView):
@@ -63,7 +63,7 @@ class EditProfileView(LoginRequiredMixin, views.UpdateView):
     slug_field = 'slug'
 
     def get_success_url(self):
-        return reverse_lazy('profile detail', kwargs={'slug': self.request.user.username})
+        return reverse_lazy('details', kwargs={'slug': self.request.user.username})
 
 
 class DeleteProfileView(LoginRequiredMixin, views.DeleteView):

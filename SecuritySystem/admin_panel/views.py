@@ -44,6 +44,7 @@ class AdminDashboardView(AdminOrObserverRequiredMixin, View):
             'users': AppUser.objects.all(),
         }
         context['update_permission'] = False
+        context['current'] = self.request.user.username
         if self.request.user.role.id == 1:
             context['update_permission'] = True
         return render(request, self.template_name, context)
@@ -94,19 +95,20 @@ class UserDeleteView(AdminRequiredMixin, DeleteView):
 
 class AssignRoleView(AdminRequiredMixin, View):
     template_name = 'admin/assign_role.html'
+    form_class = AssignRoleForm
 
     def get_object(self, slug):
         return get_object_or_404(AppUser, username=slug)
 
     def get(self, request, slug, *args, **kwargs):
-        user = self.get_object(slug)
-        form = AssignRoleForm(instance=user)
-        return render(request, self.template_name, {'form': form, 'user': user})
+        target_user  = self.get_object(slug)
+        form = self.form_class(instance=target_user )
+        return render(request, self.template_name, {'form': form, 'target_user': target_user, 'username': target_user.username })
 
     def post(self, request, slug, *args, **kwargs):
-        user = self.get_object(slug)
-        form = AssignRoleForm(request.POST, instance=user)
+        target_user  = self.get_object(slug)
+        form = AssignRoleForm(request.POST, instance=target_user )
         if form.is_valid():
             form.save()
             return redirect('admin-dashboard')
-        return render(request, self.template_name, {'form': form, 'user': user})
+        return render(request, self.template_name, {'form': form, 'target_user ': target_user })

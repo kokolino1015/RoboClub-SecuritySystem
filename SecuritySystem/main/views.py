@@ -18,16 +18,16 @@ class ChipCheckView(views.View):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
-            faculty_number = data['user'].get('faculty_number')
+            chip = data['user'].get('chip')
         except (json.JSONDecodeError, KeyError):
-            return JsonResponse({'error': 'Invalid JSON format or missing faculty number'}, status=400)
+            return JsonResponse({'error': 'Invalid JSON format or missing chip'}, status=400)
 
 
         try:
-            profile = Profile.objects.get(faculty_number=faculty_number)
+            profile = Profile.objects.get(chip=chip)
             user = AppUser.objects.get(username=profile.slug)
         except Profile.DoesNotExist:
-            return JsonResponse({'error': 'No user with this faculty number found'}, status=404)
+            return JsonResponse({'error': 'No user with this chip found'}, status=404)
 
         request.session['login_method'] = 'chip'
         login(request, user)
@@ -46,17 +46,15 @@ class ChipLogoutView(views.View):
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
-            faculty_number = data['user'].get('faculty_number') # zavisi kak shte davame jsona
+            chip = data['user'].get('chip') # zavisi kak shte davame jsona
         except (json.JSONDecodeError, KeyError):
-            return JsonResponse({'error': 'Invalid JSON format or missing faculty number'}, status=400)
+            return JsonResponse({'error': 'Invalid JSON format or missing chip'}, status=400)
 
         try:
-            profile = Profile.objects.get(faculty_number=faculty_number)
+            profile = Profile.objects.get(chip=chip)
             user = AppUser.objects.get(username=profile.slug)
         except Profile.DoesNotExist:
-            return JsonResponse({'error': 'No user with this faculty number found'}, status=404)
+            return JsonResponse({'error': 'No user with this chip found'}, status=404)
         request.session['logout_method'] = 'chip'
         logout(request)
         return JsonResponse({'message': 'User logged out successfully.'})
-        # else: ako shte checkvame dali e vlqzal predi tova
-        #     return JsonResponse({'error': 'Invalid faculty_number or user not logged in.'}, status=400)
