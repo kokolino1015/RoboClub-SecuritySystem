@@ -44,7 +44,7 @@ class AdminDashboardView(AdminOrObserverRequiredMixin, View):
             'users': AppUser.objects.all(),
         }
         context['update_permission'] = False
-        context['current'] = self.request.user.username
+        context['owner'] = self.request.user.username
         if self.request.user.role.id == 1:
             context['update_permission'] = True
         return render(request, self.template_name, context)
