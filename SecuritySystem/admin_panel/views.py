@@ -13,27 +13,27 @@ from SecuritySystem.admin_panel.forms import UserProfileForm, AssignRoleForm
 from SecuritySystem.account.mixins import AdminRequiredMixin, AdminOrObserverRequiredMixin
 
 
-class LogoutAndRedirectToSuperuserLoginView(View):
-    def get(self, request, *args, **kwargs):
-        try:
-            request.session['logout_method'] = 'web'
-            logout(request)
-        except Exception as e:
-            pass
-        return redirect('admin-login')
-
-class AdminLoginView(LoginView):
-    template_name = 'admin/login.html'
-
-    def form_valid(self, form):
-        user = form.get_user()
-        if user.role.id in [1, 2]:
-            self.request.session['login_method'] = 'web'
-            login(self.request, user)
-            return redirect('admin-dashboard')
-        else:
-            messages.error(self.request, 'Permission denied. You must be an Admin or Observer to log in.')
-            return redirect('admin-login')
+# class LogoutAndRedirectToSuperuserLoginView(View):
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             request.session['logout_method'] = 'web'
+#             logout(request)
+#         except Exception as e:
+#             pass
+#         return redirect('admin-login')
+#
+# class AdminLoginView(LoginView):
+#     template_name = 'admin/login.html'
+#
+#     def form_valid(self, form):
+#         user = form.get_user()
+#         if user.role.id in [1, 2]:
+#             self.request.session['login_method'] = 'web'
+#             login(self.request, user)
+#             return redirect('admin-dashboard')
+#         else:
+#             messages.error(self.request, 'Permission denied. You must be an Admin or Observer to log in.')
+#             return redirect('admin-login')
 
 
 class AdminDashboardView(AdminOrObserverRequiredMixin, View):

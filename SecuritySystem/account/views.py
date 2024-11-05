@@ -66,12 +66,12 @@ class EditProfileView(LoginRequiredMixin, views.UpdateView):
         return reverse_lazy('details', kwargs={'slug': self.request.user.username})
 
 
-class DeleteProfileView(LoginRequiredMixin, views.DeleteView):
-    model = UserModel
-    fields = '__all__'
-    template_name = 'account/delete_profile.html'
-    slug_field = 'username'
-
-    def get_success_url(self):
-        return reverse_lazy('home')
+# class DeleteProfileView(LoginRequiredMixin, views.DeleteView):
+#     model = UserModel
+#     fields = '__all__'
+#     template_name = 'account/delete_profile.html'
+#     slug_field = 'username'
+#
+#     def get_success_url(self):
+#         return reverse_lazy('home')
 

@@ -69,7 +69,7 @@ class UserRegistrationFrom(auth_forms.UserCreationForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'faculty_number', 'chip')
+        fields = ('first_name', 'last_name', 'faculty_number')
         widgets ={
             'first_name': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'jhondoe', 'id': 'floatingText'}),
@@ -78,9 +78,9 @@ class EditProfileForm(forms.ModelForm):
             'faculty_number': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Faculty Numer', 'id': 'floatingFacultyNumber'}
             ),
-            'chip': forms.TextInput(
-                attrs={'class': 'form-control', 'placeholder': 'chip', 'id': 'floatingChip'}
-            )
+            # 'chip': forms.TextInput(
+            #     attrs={'class': 'form-control', 'placeholder': 'chip', 'id': 'floatingChip'}
+            # )
         }
 
     # You can add user fields here by overriding the __init__ method

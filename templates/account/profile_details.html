@@ -7,8 +7,8 @@
                 {% if slug == object.slug %}
                     <p><a class="btn btn-primary py-3 w-100 mb-4" href="{% url 'edit profile' object.slug %}">Edit
                         profile</a></p>
-                    <p><a class="btn btn-primary py-3 w-100 mb-4" href="{% url 'delete profile' object.slug %}">Delete
-                        profile</a></p>
+{#                    <p><a class="btn btn-primary py-3 w-100 mb-4" href="{% url 'delete profile' object.slug %}">Delete#}
+{#                        profile</a></p>#}
                 {% endif %}
                 {% if update_permission and slug != object.slug %}
 
